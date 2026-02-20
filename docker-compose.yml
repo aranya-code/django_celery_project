@@ -1,4 +1,7 @@
 services:
+
+  redis:
+    image: redis:7-alpine
   django:
     container_name: django
     build:
@@ -11,3 +14,17 @@ services:
       - "8001:8000"
     env_file:
       - .env
+    depends_on:
+      - redis
+
+  celery:
+    container_name: celery
+    build:
+      context: .
+      dockerfile: dcelery/Dockerfile
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - .env
+    depends_on:
+      - redis
